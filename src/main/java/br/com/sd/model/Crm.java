@@ -1,4 +1,4 @@
-package br.com.sd.api.model;
+package br.com.sd.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

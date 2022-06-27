@@ -1,4 +1,4 @@
-package br.com.sd.api.model;
+package br.com.sd.model;
 
 import java.util.Set;
 
