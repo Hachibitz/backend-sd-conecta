@@ -11,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.com.sd.auth.Token;
 
 @Entity
 @Table(name = "Doctor")
@@ -36,6 +39,9 @@ public class Doctor {
 	
 	@Column(name = "mobile_phone", nullable = false)
 	private String phone;
+	
+	@Transient
+	private Token token;
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="userId", cascade = CascadeType.ALL)
     private Set<Crm> CRM;

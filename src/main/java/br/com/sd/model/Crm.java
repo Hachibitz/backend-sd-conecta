@@ -29,7 +29,7 @@ public class Crm {
 		@Column(name = "specialty")
 		private String especialidade;
 		
-		@ManyToOne(cascade= CascadeType.ALL)
-	    @JoinColumn(name = "userID")
+		@ManyToOne(cascade= CascadeType.ALL, targetEntity=Doctor.class)
+	    @JoinColumn(name = "userId")
 		private String userId;
 }
