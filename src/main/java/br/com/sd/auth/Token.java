@@ -1,31 +1,19 @@
 package br.com.sd.auth;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
-@Table(name = "TOKEN")
 public class Token {
-	
-	@Id //define a coluna como primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private int id;
-	
-	@Column(name = "access_token", nullable = false)
+
+	@JsonProperty("access_token")
 	private String access_token;
 	
-	@Column(name = "scope")
+	@JsonProperty("scope")
 	private String scope;
 	
-	@Column(name = "token_type")
+	@JsonProperty("token_type")
 	private String token_type;
 	
-	@Column(name = "expires_in")
+	@JsonProperty("expires_in")
 	private int expires_in;
 	
 	public Token() {

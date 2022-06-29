@@ -40,9 +40,6 @@ public class Doctor {
 	@Column(name = "mobile_phone", nullable = false)
 	private String phone;
 	
-	@Transient
-	private Token token;
-	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="userId", cascade = CascadeType.ALL)
     private Set<Crm> CRM;
 	
