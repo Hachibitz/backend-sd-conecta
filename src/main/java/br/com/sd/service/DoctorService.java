@@ -1,12 +1,18 @@
 package br.com.sd.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import br.com.sd.auth.Token;
 import br.com.sd.auth.TokenRequest;
-import br.com.sd.model.DoctorDTO;
+import br.com.sd.model.DoctorDTORequest;
+import br.com.sd.model.DoctorDTOResponse;
 import br.com.sd.proxy.DoctorProxy;
 
 @Service
@@ -14,6 +20,9 @@ public class DoctorService {
 	
 	@Autowired
 	DoctorProxy proxy;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	public Token getToken() {
 		TokenRequest tkRequest = new TokenRequest();
@@ -24,9 +33,23 @@ public class DoctorService {
 		return response.getBody();
 	}
 
-	public ResponseEntity<DoctorDTO> insertDoctor(DoctorDTO doctor) {
+	/*public ResponseEntity<DoctorDTO> insertDoctor(DoctorDTO doctor) {
 		Token token = getToken();
-		ResponseEntity<DoctorDTO> response = proxy.insertDoctor(doctor, token.getAccess_token());
+		System.out.println(token.getAccess_token());
+		ResponseEntity<DoctorDTO> response = proxy.insertDoctor(doctor, "Bearer "+token.getAccess_token());
 		return ResponseEntity.ok(response.getBody());
+	}*/
+	
+	public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor){
+		Token token = getToken();
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBearerAuth(token.getAccess_token());
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<DoctorDTORequest> request = 
+			      new HttpEntity<>(doctor, httpHeaders);
+		ResponseEntity<DoctorDTOResponse> response = restTemplate
+				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
+						HttpMethod.POST, request, DoctorDTOResponse.class);
+		return response;
 	}
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class DoctorDTO {
+public class DoctorDTOResponse {
 	
 	@JsonProperty("email")
 	private String email;
@@ -18,9 +18,9 @@ public class DoctorDTO {
 	@JsonProperty("surname")
 	private String surname;
 	
-	@JsonProperty("mobile_phone")
-	private String mobile_phone;
-	
 	@JsonProperty("crms")
 	private List<CrmsDTO> crms;
+	
+	@JsonProperty("mobile_phone")
+	private String mobile_phone;
 }
