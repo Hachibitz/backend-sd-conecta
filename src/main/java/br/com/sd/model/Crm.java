@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "CRM")
 public class Crm {
@@ -20,16 +22,20 @@ public class Crm {
 	    @Column(name = "id", nullable = false) //nome da coluna e critério para não nula.
 		private Long id;
 		
+		@JsonProperty("crm")
 		@Column(name = "crm", nullable = false)
 		private String crm;
 		
+		@JsonProperty("uf")
 		@Column(name = "uf", nullable = false)
 		private String uf;
 		
+		@JsonProperty("specialty")
 		@Column(name = "specialty")
 		private String especialidade;
 		
 		@ManyToOne(cascade= CascadeType.ALL, targetEntity=Doctor.class)
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
 	    @JoinColumn(name = "userId")
 		private String userId;
 }

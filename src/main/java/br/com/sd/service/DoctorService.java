@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,12 @@ import org.springframework.web.client.RestTemplate;
 
 import br.com.sd.auth.Token;
 import br.com.sd.auth.TokenRequest;
+import br.com.sd.dtomapper.DoctorRequestMapper;
+import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
 import br.com.sd.proxy.DoctorProxy;
+import br.com.sd.repository.DoctorRepository;
 
 @Service
 public class DoctorService {
@@ -23,6 +27,9 @@ public class DoctorService {
 	
 	@Autowired
 	RestTemplate restTemplate;
+	
+	@Autowired
+	DoctorRepository repository;
 	
 	public Token getToken() {
 		TokenRequest tkRequest = new TokenRequest();
@@ -40,6 +47,20 @@ public class DoctorService {
 		return ResponseEntity.ok(response.getBody());
 	}*/
 	
+	private final DoctorRequestMapper doctorRequestMapper = new DoctorRequestMapper() {
+		@Override
+		public Doctor dtoToDoctorMapper(DoctorDTORequest dtoDoc){
+			
+			Doctor doctor = new Doctor();
+			doctor.setEmail(dtoDoc.getEmail());
+			doctor.setName(dtoDoc.getName());
+			doctor.setSobrenome(dtoDoc.getSurname());
+			doctor.setPhone(dtoDoc.getMobile_phone());
+			doctor.setCRM(dtoDoc.getCrms());
+			return doctor;
+		}
+	};
+	
 	public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor){
 		Token token = getToken();
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -50,6 +71,10 @@ public class DoctorService {
 		ResponseEntity<DoctorDTOResponse> response = restTemplate
 				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
 						HttpMethod.POST, request, DoctorDTOResponse.class);
+		Doctor doc = doctorRequestMapper.dtoToDoctorMapper(doctor);
+		if(response.getStatusCode() == HttpStatus.OK) repository.
+												save(doc);
+		System.out.println("id: "+doc.getId()+"\nemail : "+doc.getEmail()+"\nname: "+doc.getName());
 		return response;
 	}
 }

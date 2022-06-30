@@ -12,4 +12,39 @@ public class CrmsDTO {
 	
 	@JsonProperty("specialty")
 	private String specialty;
+	
+	public CrmsDTO() {
+		
+	}
+
+	public CrmsDTO(String crm, String uf, String specialty) {
+		this.crm = crm;
+		this.uf = uf;
+		this.specialty = specialty;
+	}
+
+	public String getCrm() {
+		return crm;
+	}
+
+	public void setCrm(String crm) {
+		this.crm = crm;
+	}
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+
+	public String getSpecialty() {
+		return specialty;
+	}
+
+	public void setSpecialty(String specialty) {
+		this.specialty = specialty;
+	}
+	
 }

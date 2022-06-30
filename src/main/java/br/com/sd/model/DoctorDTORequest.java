@@ -19,7 +19,7 @@ public class DoctorDTORequest {
 	private String surname;
 	
 	@JsonProperty("crms")
-	private List<CrmsDTO> crms;
+	private List<Crm> crms;
 	
 	@JsonProperty("mobile_phone")
 	private String mobile_phone;

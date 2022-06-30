@@ -1,7 +1,5 @@
 package br.com.sd.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -9,18 +7,13 @@ import lombok.Data;
 @Data
 public class DoctorDTOResponse {
 	
-	@JsonProperty("email")
-	private String email;
+	@JsonProperty("access_token")
+	private String access_token;
 	
-	@JsonProperty("name")
-	private String name;
+	@JsonProperty("refresh_token")
+	private String refresh_token;
 	
-	@JsonProperty("surname")
-	private String surname;
-	
-	@JsonProperty("crms")
-	private List<CrmsDTO> crms;
-	
-	@JsonProperty("mobile_phone")
-	private String mobile_phone;
+	@JsonProperty("authorization_status")
+	private String authorization_status;
+
 }
