@@ -1,5 +1,8 @@
 package br.com.sd.service;
 
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -72,9 +75,34 @@ public class DoctorService {
 				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
 						HttpMethod.POST, request, DoctorDTOResponse.class);
 		Doctor doc = doctorRequestMapper.dtoToDoctorMapper(doctor);
+		System.out.println(doc.getCRM());
 		if(response.getStatusCode() == HttpStatus.OK) repository.
 												save(doc);
-		System.out.println("id: "+doc.getId()+"\nemail : "+doc.getEmail()+"\nname: "+doc.getName());
 		return response;
+	}
+	
+	public String updateDoctor(Long id, Doctor theDoctor) {
+		theDoctor.setId(id);
+		repository.save(theDoctor);
+		return "Update realizado!";
+	}
+	
+	public String deleteDoctor(Long id) {
+		Doctor theDoctor  = repository.getReferenceById(id);
+		repository.delete(theDoctor);
+		return "Delete realizado!";
+	}
+	
+	public List<Doctor> getDoctors(String name, String crm) {
+		if (Objects.nonNull(name) && !Objects.nonNull(crm)) {
+			return repository.findByName(name);
+		}
+		if(Objects.nonNull(name) && Objects.nonNull(crm)) {
+			return repository.findByNameAndSpecialty(crm, name);
+		}
+		if (!Objects.nonNull(name) && Objects.nonNull(crm)) {
+			return repository.findBySpecialty(crm);
+		}
+		return repository.findAll();
 	}
 }

@@ -12,11 +12,14 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "CRM")
+@Data
 public class Crm {
 
-	//definindo os fields e configurando as colunas
+		//definindo os fields e configurando as colunas
 		@Id //define a coluna como primary key
 	    @GeneratedValue(strategy = GenerationType.IDENTITY) //estratégio de auto-increment
 	    @Column(name = "id", nullable = false) //nome da coluna e critério para não nula.
@@ -34,8 +37,8 @@ public class Crm {
 		@Column(name = "specialty")
 		private String especialidade;
 		
-		@ManyToOne(cascade= CascadeType.ALL, targetEntity=Doctor.class)
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @JoinColumn(name = "userId")
-		private String userId;
+		//@ManyToOne(cascade= CascadeType.ALL, targetEntity=Doctor.class)
+		//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	    //@JoinColumn(name = "userId")
+		//private String userId;
 }

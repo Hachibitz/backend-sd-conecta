@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,7 +41,8 @@ public class Doctor {
 	@Column(name = "mobile_phone", nullable = false)
 	private String phone;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy="userId", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "id")
     private List<Crm> CRM;
 	
 	public Doctor() {
