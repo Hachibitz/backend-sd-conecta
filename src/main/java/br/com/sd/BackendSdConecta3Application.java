@@ -9,10 +9,10 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableFeignClients
-public class BackendSdConecta2Application {
+public class BackendSdConecta3Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendSdConecta2Application.class, args);
+		SpringApplication.run(BackendSdConecta3Application.class, args);
 	}
 	
 	@Bean
