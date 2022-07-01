@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
-import br.com.sd.repository.DoctorRepository;
 import br.com.sd.service.DoctorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,9 +29,6 @@ public class DoctorController {
 	
 	@Autowired
 	private DoctorService service;
-	
-	@Autowired
-	private DoctorRepository repository;
     
 	@Operation(summary = "Send the Doctor to create in the body with the bearerToken in the headers.")
 	@RequestMapping(value = "c/oauth2", method = RequestMethod.POST)
@@ -70,9 +66,4 @@ public class DoctorController {
 		return service.login(email, senha);
 	}
 	
-	@GetMapping(path = "/flywayschema")
-	public List<String> flywaySchema(){
-		return repository.getFlywaySchema();
-	}
-		
 }
