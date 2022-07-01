@@ -19,7 +19,7 @@ public class Crm {
 		//definindo os fields e configurando as colunas
 		@Id //define a coluna como primary key
 	    @GeneratedValue(strategy = GenerationType.IDENTITY) //estratégio de auto-increment
-	    @Column(name = "id", nullable = false) //nome da coluna e critério para não nula.
+	    @Column(name = "id") //nome da coluna e critério para não nula.
 		private Long id;
 		
 		@JsonProperty("crm")

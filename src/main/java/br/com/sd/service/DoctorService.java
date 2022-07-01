@@ -16,10 +16,12 @@ import org.springframework.web.client.RestTemplate;
 import br.com.sd.auth.Token;
 import br.com.sd.auth.TokenRequest;
 import br.com.sd.dtomapper.DoctorRequestMapper;
+import br.com.sd.exception.UnauthorizedException;
 import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
 import br.com.sd.proxy.DoctorProxy;
+import br.com.sd.repository.CrmRepository;
 import br.com.sd.repository.DoctorRepository;
 
 @Service
@@ -33,6 +35,9 @@ public class DoctorService {
 	
 	@Autowired
 	DoctorRepository repository;
+	
+	@Autowired
+	CrmRepository crmRepository;
 	
 	public Token getToken() {
 		TokenRequest tkRequest = new TokenRequest();
@@ -82,9 +87,9 @@ public class DoctorService {
 		return "Update realizado!";
 	}
 	
-	public String deleteDoctor(Long id) {
-		Doctor theDoctor  = repository.getReferenceById(id);
-		repository.delete(theDoctor);
+	public String deleteDoctor(Long id){
+		crmRepository.deleteById(id);
+		repository.deleteById(id);
 		return "Delete realizado!";
 	}
 	
@@ -128,7 +133,8 @@ public class DoctorService {
 			repository.save(theDoctor);
 			if("AUTHORIZED".equals(response.getBody().getAuthorization_status())) return response;
 		}
-		ResponseEntity<DoctorDTOResponse> resp = new ResponseEntity<DoctorDTOResponse>(HttpStatus.UNAUTHORIZED);
-		return resp;
+		theDoctor.setAuthorization_status("WAITING_FOR_AUTHORIZATION");
+		repository.save(theDoctor);
+		throw new UnauthorizedException("Usuário ou senha inválido.");
 	}
 }

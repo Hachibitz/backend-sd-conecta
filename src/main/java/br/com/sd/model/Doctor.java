@@ -44,7 +44,7 @@ public class Doctor {
 	@Column(name = "mobile_phone", nullable = false)
 	private String phone;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "id")
     private List<Crm> CRM;
 	
