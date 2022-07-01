@@ -17,6 +17,7 @@ public interface DoctorRequestMapper {
 		doctor.setSobrenome(dtoDoc.getSurname());
 		doctor.setPhone(dtoDoc.getMobile_phone());
 		doctor.setCRM(dtoDoc.getCrms());
+		doctor.setPass(dtoDoc.getMobile_phone());
 		return doctor;
 	}
 	

@@ -13,11 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "Doctor")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Doctor {
 	
 	//definindo os fields e configurando as colunas

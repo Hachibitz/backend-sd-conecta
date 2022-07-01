@@ -1,13 +1,10 @@
 package br.com.sd.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,9 +33,5 @@ public class Crm {
 		@JsonProperty("specialty")
 		@Column(name = "specialty")
 		private String especialidade;
-		
-		//@ManyToOne(cascade= CascadeType.ALL, targetEntity=Doctor.class)
-		//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	    //@JoinColumn(name = "userId")
-		//private String userId;
+
 }

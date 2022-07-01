@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import br.com.sd.auth.Token;
 import br.com.sd.auth.TokenRequest;
 import br.com.sd.model.DoctorDTORequest;
+import br.com.sd.model.DoctorDTOResponse;
 import feign.Headers;
 
 @FeignClient(name = "sdApiIntegration", url = "https://beta.sdconecta.com")
@@ -20,5 +21,5 @@ public interface DoctorProxy {
 	ResponseEntity<Token> getToken(@RequestBody TokenRequest tkRequest);
 	
 	@PostMapping(path = "/api/v2/partners/generate-user-token", consumes = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<DoctorDTORequest> insertDoctor(@RequestBody DoctorDTORequest doctor, @RequestHeader("Authorization") String bearerToken);
+	ResponseEntity<DoctorDTOResponse> insertDoctor(@RequestBody DoctorDTORequest doctor, @RequestHeader("Authorization") String bearerToken);
 }

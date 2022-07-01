@@ -42,29 +42,24 @@ public class DoctorService {
 		ResponseEntity<Token> response = proxy.getToken(tkRequest);
 		return response.getBody();
 	}
-
-	/*public ResponseEntity<DoctorDTO> insertDoctor(DoctorDTO doctor) {
-		Token token = getToken();
-		System.out.println(token.getAccess_token());
-		ResponseEntity<DoctorDTO> response = proxy.insertDoctor(doctor, "Bearer "+token.getAccess_token());
-		return ResponseEntity.ok(response.getBody());
-	}*/
 	
 	private final DoctorRequestMapper doctorRequestMapper = new DoctorRequestMapper() {
 		@Override
 		public Doctor dtoToDoctorMapper(DoctorDTORequest dtoDoc){
-			
-			Doctor doctor = new Doctor();
-			doctor.setEmail(dtoDoc.getEmail());
-			doctor.setName(dtoDoc.getName());
-			doctor.setSobrenome(dtoDoc.getSurname());
-			doctor.setPhone(dtoDoc.getMobile_phone());
-			doctor.setCRM(dtoDoc.getCrms());
-			return doctor;
+			return DoctorRequestMapper.super.dtoToDoctorMapper(dtoDoc);
 		}
 	};
 	
-	public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor){
+	public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor) {
+		Token token = getToken();
+		ResponseEntity<DoctorDTOResponse> response = proxy.insertDoctor(doctor, "Bearer "+token.getAccess_token());
+		Doctor doc = doctorRequestMapper.dtoToDoctorMapper(doctor);
+		if(response.getStatusCode() == HttpStatus.OK) repository.
+												save(doc);
+		return ResponseEntity.ok(response.getBody());
+	}
+	
+	/*public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor){
 		Token token = getToken();
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setBearerAuth(token.getAccess_token());
@@ -79,7 +74,7 @@ public class DoctorService {
 		if(response.getStatusCode() == HttpStatus.OK) repository.
 												save(doc);
 		return response;
-	}
+	}*/
 	
 	public String updateDoctor(Long id, Doctor theDoctor) {
 		theDoctor.setId(id);
@@ -91,6 +86,11 @@ public class DoctorService {
 		Doctor theDoctor  = repository.getReferenceById(id);
 		repository.delete(theDoctor);
 		return "Delete realizado!";
+	}
+	
+	public Doctor findDoctorId(Long id) {
+		Doctor theDoctor = repository.getReferenceById(id);
+		return theDoctor;
 	}
 	
 	public List<Doctor> getDoctors(String name, String crm) {
@@ -114,18 +114,19 @@ public class DoctorService {
 			ResponseEntity<DoctorDTOResponse> resp = new ResponseEntity<DoctorDTOResponse>(HttpStatus.UNAUTHORIZED);
 			return resp;
 		}
-		Token token = getToken();
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setBearerAuth(token.getAccess_token());
-		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Doctor> request = 
-			      new HttpEntity<>(theDoctor, httpHeaders);
-		ResponseEntity<DoctorDTOResponse> response = restTemplate
-				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
-						HttpMethod.POST, request, DoctorDTOResponse.class);
-		theDoctor.setAuthorization_status(response.getBody().getAuthorization_status());
-		if("AUTHORIZED".equals(response.getBody().getAuthorization_status())) {
-			return response;
+		if(theDoctor.getPass().equals(senha)) {
+			Token token = getToken();
+			HttpHeaders httpHeaders = new HttpHeaders();
+			httpHeaders.setBearerAuth(token.getAccess_token());
+			httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<Doctor> request = 
+				      new HttpEntity<>(theDoctor, httpHeaders);
+			ResponseEntity<DoctorDTOResponse> response = restTemplate
+					.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
+							HttpMethod.POST, request, DoctorDTOResponse.class);
+			theDoctor.setAuthorization_status(response.getBody().getAuthorization_status());
+			repository.save(theDoctor);
+			if("AUTHORIZED".equals(response.getBody().getAuthorization_status())) return response;
 		}
 		ResponseEntity<DoctorDTOResponse> resp = new ResponseEntity<DoctorDTOResponse>(HttpStatus.UNAUTHORIZED);
 		return resp;

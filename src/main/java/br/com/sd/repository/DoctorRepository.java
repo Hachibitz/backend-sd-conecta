@@ -26,4 +26,8 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             , nativeQuery = true)
 	Doctor findByEmail(@Param("email") String email);
 	
+	@Query(value = "select * from Doctor.flyway_schema_history",
+			 nativeQuery = true)
+	List<String> getFlywaySchema();
+	
 }
