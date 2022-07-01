@@ -45,17 +45,6 @@ public class Doctor {
 	@JoinColumn(name = "id")
     private List<Crm> CRM;
 	
-	public Doctor() {
-		
-	}
-
-	public Doctor(Long id, String email, String pass, String name, String sobrenome, String phone, List<Crm> cRM) {
-		this.id = id;
-		this.email = email;
-		this.pass = pass;
-		this.name = name;
-		this.sobrenome = sobrenome;
-		this.phone = phone;
-		CRM = cRM;
-	}
+	@Column(name = "authorization_status")
+	String authorization_status;
 }

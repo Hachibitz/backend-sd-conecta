@@ -105,4 +105,29 @@ public class DoctorService {
 		}
 		return repository.findAll();
 	}
+	
+	public ResponseEntity<DoctorDTOResponse> login(String email, String senha){
+		Doctor theDoctor = new Doctor();
+		if(Objects.nonNull(repository.findByEmail(email))) {
+			theDoctor = repository.findByEmail(email);
+		}else{
+			ResponseEntity<DoctorDTOResponse> resp = new ResponseEntity<DoctorDTOResponse>(HttpStatus.UNAUTHORIZED);
+			return resp;
+		}
+		Token token = getToken();
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setBearerAuth(token.getAccess_token());
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<Doctor> request = 
+			      new HttpEntity<>(theDoctor, httpHeaders);
+		ResponseEntity<DoctorDTOResponse> response = restTemplate
+				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
+						HttpMethod.POST, request, DoctorDTOResponse.class);
+		theDoctor.setAuthorization_status(response.getBody().getAuthorization_status());
+		if("AUTHORIZED".equals(response.getBody().getAuthorization_status())) {
+			return response;
+		}
+		ResponseEntity<DoctorDTOResponse> resp = new ResponseEntity<DoctorDTOResponse>(HttpStatus.UNAUTHORIZED);
+		return resp;
+	}
 }

@@ -21,4 +21,9 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
 	@Query(value = "select * from Doctor s inner join CRM c on c.id = s.id where c.specialty = :specialty and s.name = :name"
             , nativeQuery = true)
 	List<Doctor> findByNameAndSpecialty(@Param("specialty") String specialty, @Param("name") String name);
+	
+	@Query(value = "select * from Doctor s where s.email = :email"
+            , nativeQuery = true)
+	Doctor findByEmail(@Param("email") String email);
+	
 }
