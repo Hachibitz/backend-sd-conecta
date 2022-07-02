@@ -31,7 +31,7 @@ public class DoctorController {
 	@Autowired
 	private DoctorService service;
     
-	@Operation(summary = "Send the Doctor to create in the body with the bearerToken in the headers.")
+	@Operation(summary = "Send the Doctor to create in the body with the bearerToken in the headers. *Change the values of 'string' to the real values, and use a valid email address.")
 	@RequestMapping(value = "c/oauth2", method = RequestMethod.POST)
 	public ResponseEntity<DoctorDTOResponse> doc(@RequestBody DoctorDTORequest doctor) {
 		return service.insertDoctor(doctor);
@@ -55,7 +55,7 @@ public class DoctorController {
 		return service.findDoctorId(id);
 	}
 	
-	@Operation(summary = "List all doctors. Filter by name and specialty optionally.")
+	@Operation(summary = "List all doctors. Filter by name and specialty optionally. *CASE SENSITIVE")
 	@GetMapping(value = "/list")
 	public List<Doctor> listDoc(@RequestParam(required = false) String name, @RequestParam(required = false) String specialty){
 		return service.getDoctors(name, specialty);
