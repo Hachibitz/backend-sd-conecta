@@ -20,7 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.sd.exception.UnauthorizedException;
-import br.com.sd.model.Crm;
+import br.com.sd.model.CrmDTO;
 import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
@@ -113,7 +113,7 @@ public class DoctorServiceTest {
 	}
 	
 	public DoctorDTORequest createDoctor() {
-		List<Crm> crmList = new ArrayList<>();
+		List<CrmDTO> crmList = new ArrayList<>();
 		DoctorDTORequest theDoctor = new DoctorDTORequest();
 		theDoctor.setCrms(crmList);
 		theDoctor.setEmail("anymail@email.com");

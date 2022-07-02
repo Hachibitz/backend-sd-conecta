@@ -17,6 +17,7 @@ import br.com.sd.auth.Token;
 import br.com.sd.auth.TokenRequest;
 import br.com.sd.dtomapper.DoctorRequestMapper;
 import br.com.sd.exception.UnauthorizedException;
+import br.com.sd.model.Crm;
 import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
@@ -137,4 +138,5 @@ public class DoctorService {
 		repository.save(theDoctor);
 		throw new UnauthorizedException("Usuário ou senha inválido.");
 	}
+
 }
