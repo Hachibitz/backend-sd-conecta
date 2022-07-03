@@ -64,23 +64,6 @@ public class DoctorService {
 		return ResponseEntity.ok(response.getBody());
 	}
 	
-	/*public ResponseEntity<DoctorDTOResponse> insertDoctor(DoctorDTORequest doctor){
-		Token token = getToken();
-		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setBearerAuth(token.getAccess_token());
-		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<DoctorDTORequest> request = 
-			      new HttpEntity<>(doctor, httpHeaders);
-		ResponseEntity<DoctorDTOResponse> response = restTemplate
-				.exchange("https://beta.sdconecta.com/api/v2/partners/generate-user-token",
-						HttpMethod.POST, request, DoctorDTOResponse.class);
-		Doctor doc = doctorRequestMapper.dtoToDoctorMapper(doctor);
-		System.out.println(doc.getCRM());
-		if(response.getStatusCode() == HttpStatus.OK) repository.
-												save(doc);
-		return response;
-	}*/
-	
 	public String updateDoctor(Long id, Doctor theDoctor) {
 		theDoctor.setId(id);
 		repository.save(theDoctor);

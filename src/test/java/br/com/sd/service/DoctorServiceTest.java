@@ -1,8 +1,12 @@
 package br.com.sd.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,16 +18,20 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.sd.auth.Token;
+import br.com.sd.dtomapper.DoctorRequestMapper;
 import br.com.sd.exception.UnauthorizedException;
+import br.com.sd.model.Crm;
 import br.com.sd.model.CrmDTO;
 import br.com.sd.model.Doctor;
 import br.com.sd.model.DoctorDTORequest;
 import br.com.sd.model.DoctorDTOResponse;
+import br.com.sd.proxy.DoctorProxy;
+import br.com.sd.repository.CrmRepository;
 import br.com.sd.repository.DoctorRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,13 +41,19 @@ public class DoctorServiceTest {
 	DoctorService doctorService;
 	
 	@Mock
-	DoctorRepository repository;
+	DoctorRepository doctorRepository;
 	
 	@Mock
-	Doctor doctorMock;
+	CrmRepository crmRepository;
 	
 	@Mock
 	RestTemplate restTemplate;
+	
+	@Mock
+	DoctorProxy proxy;
+	
+	@Mock
+	DoctorRequestMapper doctorRequestMapper;
 	
     @BeforeEach
     public void init() {
@@ -50,51 +64,75 @@ public class DoctorServiceTest {
 	
 	@Test
 	public void updateDoctor() {
-		Mockito.when(doctorService.updateDoctor(Mockito.anyLong(), Mockito.any(Doctor.class))).thenReturn("Update successful!");
-		Mockito.when(doctorService.updateDoctor(Mockito.anyLong(), null)).thenReturn("No body!");
-		Mockito.when(doctorService.updateDoctor(null, Mockito.any(Doctor.class))).thenReturn("Id not Found!");
-		Mockito.when(doctorService.updateDoctor(null, null)).thenReturn("Invalid request: no Id and no body!");
+		Mockito.when(doctorRepository.save(Mockito.any())).thenReturn(null);
+		String response = doctorService.updateDoctor(1L, new Doctor());
+		assertEquals(response, "Update realizado!");
 	}
 	
 	@Test
 	public void deleteDoctor() {
-		Mockito.when(doctorService.deleteDoctor(Mockito.anyLong())).thenReturn("Delete successful!");
-		Mockito.when(doctorService.deleteDoctor(null)).thenReturn("Id not Found!");
+		Mockito.doNothing().when(crmRepository).deleteById(Mockito.any());
+		Mockito.doNothing().when(doctorRepository).deleteById(Mockito.any());
+		String response = doctorService.deleteDoctor(1L);
+		assertEquals(response, "Delete realizado!");
 	}
 	
 	@Test
 	public void findDoctorById() {
-		Mockito.when(doctorService.findDoctorId(Mockito.anyLong())).thenReturn(doctorMock);
-		Mockito.when(doctorService.findDoctorId(null)).thenThrow(NullPointerException.class);
+		Mockito.when(doctorRepository.getReferenceById(Mockito.any())).thenReturn(new Doctor());
+		Doctor response = doctorService.findDoctorId(1L);
+		assertNotNull(response);
 	}
 	
 	@Test
-	public void getDoctors() {
-		Mockito.when(doctorService.getDoctors(null, null)).thenReturn(repository.findAll());
-		Mockito.when(doctorService.getDoctors(null, Mockito.anyString())).thenReturn(repository.findBySpecialty("mockSpecialty"));
-		Mockito.when(doctorService.getDoctors(Mockito.anyString(), null)).thenReturn(repository.findByName("mockName"));
-		Mockito.when(doctorService.getDoctors(Mockito.anyString(), Mockito.anyString())).thenReturn(repository.findByNameAndSpecialty("mockName", "mockSpecialty"));
+	public void getDoctors1() {
+		List<Doctor> doctor = new ArrayList<>();
+		Mockito.when(doctorRepository.findByName(Mockito.any())).thenReturn(doctor);
+		List<Doctor> response = doctorService.getDoctors(Mockito.anyString(), null);
+		assertNotNull(response);
+	}
+	
+	@Test
+	public void getDoctors2() {
+		List<Doctor> doctor = new ArrayList<>();
+		Mockito.when(doctorRepository.findBySpecialty(Mockito.any())).thenReturn(doctor);
+		List<Doctor> response = doctorService.getDoctors(null, Mockito.anyString());
+		assertNotNull(response);
+	}
+	
+	@Test
+	public void getDoctors3() {
+		List<Doctor> doctor = new ArrayList<>();
+		Mockito.when(doctorRepository.findByNameAndSpecialty(Mockito.any(), Mockito.any())).thenReturn(doctor);
+		List<Doctor> response = doctorService.getDoctors(Mockito.anyString(), Mockito.anyString());
+		assertNotNull(response);
+	}
+	
+	@Test
+	public void getDoctors4() {
+		List<Doctor> doctor = new ArrayList<>();
+		Mockito.when(doctorRepository.findAll()).thenReturn(doctor);
+		List<Doctor> response = doctorService.getDoctors(null, null);
+		assertNotNull(response);
 	}
 	
 	@Test
 	public void login() {
-		Mockito.when(doctorService.login(null, null)).thenThrow(UnauthorizedException.class);
-		Mockito.when(doctorService.login(null, Mockito.anyString())).thenThrow(UnauthorizedException.class);
-		Mockito.when(doctorService.login(Mockito.anyString(), null)).thenThrow(UnauthorizedException.class);
-        Mockito.when(restTemplate.exchange(ArgumentMatchers.anyString(),
-                ArgumentMatchers.any(HttpMethod.class),
-                ArgumentMatchers.any(HttpEntity.class),
-                ArgumentMatchers.<Class<DoctorDTOResponse>>any())).thenReturn(ResponseEntity.ok(doctorDTOResponseBuilder("Authorized")));
+		UnauthorizedException thrown = Assertions.assertThrows(UnauthorizedException.class, () -> {
+			Mockito.when(doctorRepository.findByEmail(Mockito.any())).thenReturn(createDoctor());
+			Mockito.when(doctorRepository.save(Mockito.any())).thenReturn(new Doctor());
+			ResponseEntity<DoctorDTOResponse> response = doctorService.login("mockmail@email.com", Mockito.anyString());
+		});
+		Assertions.assertEquals(("Usuário ou senha inválido."), thrown.getMessage());
 	}
 	
 	@Test
-	public void inserDoctorTest() {
-		DoctorDTORequest theDoctor = createDoctor();
-		DoctorDTORequest badDoctor = createBadDoctor();
-		ResponseEntity<DoctorDTOResponse> badResponse = new ResponseEntity<DoctorDTOResponse>(HttpStatus.BAD_REQUEST);
-		ResponseEntity<DoctorDTOResponse> goodResponse = new ResponseEntity<DoctorDTOResponse>(HttpStatus.OK);
-		Mockito.when(doctorService.insertDoctor(theDoctor)).thenReturn(goodResponse);
-		Mockito.when(doctorService.insertDoctor(badDoctor)).thenReturn(badResponse);
+	public void insertDoctorTest() {
+		Mockito.when(proxy.getToken(Mockito.any())).thenReturn(ResponseEntity.ok(createToken()));
+		Mockito.when(proxy.insertDoctor(Mockito.any(), Mockito.anyString())).thenReturn(ResponseEntity.ok(new DoctorDTOResponse()));
+		Mockito.when(doctorRepository.save(Mockito.any())).thenReturn(new Doctor());
+		ResponseEntity<DoctorDTOResponse> response = doctorService.insertDoctor(createDoctorRequest());
+		assertEquals(response, ResponseEntity.ok().body(new DoctorDTOResponse()));
 	}
 	
 	public DoctorDTOResponse doctorDTOResponseBuilder(String status) {
@@ -112,14 +150,39 @@ public class DoctorServiceTest {
 		}
 	}
 	
-	public DoctorDTORequest createDoctor() {
+	public Token createToken() {
+		Token token = new Token();
+		token.setAccess_token("mock");
+		token.setExpires_in(0000);
+		token.setScope("mock");
+		token.setToken_type("Bearer");
+		return token;
+	}
+	
+	public DoctorDTORequest createDoctorRequest() {
 		List<CrmDTO> crmList = new ArrayList<>();
+		CrmDTO crm = new CrmDTO();
+		crmList.add(crm);
 		DoctorDTORequest theDoctor = new DoctorDTORequest();
 		theDoctor.setCrms(crmList);
 		theDoctor.setEmail("anymail@email.com");
 		theDoctor.setMobile_phone(null);
 		theDoctor.setName("DoctorTest");
 		theDoctor.setSurname("Testo");
+		return theDoctor;
+	}
+	
+	public Doctor createDoctor() {
+		List<Crm> crmList = new ArrayList<>();
+		Crm crm = new Crm();
+		crmList.add(crm);
+		Doctor theDoctor = new Doctor();
+		theDoctor.setCRM(crmList);
+		theDoctor.setEmail("anymail@email.com");
+		theDoctor.setPhone(null);
+		theDoctor.setName("DoctorTest");
+		theDoctor.setSobrenome("Testo");
+		theDoctor.setPass("00000001");
 		return theDoctor;
 	}
 	

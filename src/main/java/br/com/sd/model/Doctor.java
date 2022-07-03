@@ -23,13 +23,12 @@ import lombok.Data;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Doctor {
 	
-	//definindo os fields e configurando as colunas
-	@Id //define a coluna como primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //estratégio de auto-increment
-    @Column(name = "id", nullable = false) //nome da coluna e critério para não nula.
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
 	private Long id;
 	
-	@Column(name = "email", nullable = false, unique = true) //critério para unique
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	
 	@Column(name = "password")

@@ -16,10 +16,9 @@ import lombok.Data;
 @Data
 public class Crm {
 
-		//definindo os fields e configurando as colunas
-		@Id //define a coluna como primary key
-	    @GeneratedValue(strategy = GenerationType.IDENTITY) //estratégio de auto-increment
-	    @Column(name = "id") //nome da coluna e critério para não nula.
+		@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    @Column(name = "id")
 		private Long id;
 		
 		@JsonProperty("crm")
