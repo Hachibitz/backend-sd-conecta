@@ -7,19 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.sd.auth.Token;
@@ -54,13 +48,6 @@ public class DoctorServiceTest {
 	
 	@Mock
 	DoctorRequestMapper doctorRequestMapper;
-	
-    @BeforeEach
-    public void init() {
-        restTemplate = new RestTemplate();
-        MockitoAnnotations.initMocks(this);
-        ReflectionTestUtils.setField(doctorService, "restTemplate", restTemplate);
-    }
 	
 	@Test
 	public void updateDoctor() {
