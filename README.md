@@ -44,7 +44,7 @@ Consultar usuário por ID;
 - 1 - Importar o projeto como projeto Maven;
 - 2 - Instalar o Lombok na IDE utilizada:  
 
-Passo 1 --> Acessar o repositório local do maven depois de importado o projeto (No windows "C:\Users\ {seuUsuario} \.m2\repository"),  
+Passo 1 --> Acessar o repositório local do maven depois de importado o projeto (No windows "C:\Users\ {seuUsuario} \ .m2\repository"),  
 
 Passo 2 --> Abrir um terminal no diretório .\org\projectlombok\lombok\1.18.24,  
 
